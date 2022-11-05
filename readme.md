@@ -10,4 +10,4 @@ A trade is executed when a buy price is greater than or equal to a sell price. T
 
 
 # LLD: #
-![](../LLD.png)
+![Alt text](docs/LLD.png)
