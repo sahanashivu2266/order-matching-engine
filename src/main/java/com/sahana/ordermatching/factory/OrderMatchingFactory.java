@@ -10,7 +10,7 @@ public class OrderMatchingFactory {
 
         switch (order.getOrderType()) {
             case LIMIT_ORDER:
-                throw new UnsupportedOperationException("Limit order is not supported yet"); //todo handle this
+                throw new UnsupportedOperationException("Limit order is not supported yet");
             default:
                 return new MatchMarketOrder(order);
         }
