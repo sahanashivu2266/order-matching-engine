@@ -17,7 +17,6 @@ public class MatchMarketOrder implements OrderStrategy {
 
     @Override
     public void processOrder(Order order) {
-        // OrderBook.getOrderBook().addOrderToOrderBook(order);
         if (order.getOrderSide() == OrderSide.BUY) {
             matchBuyOrder(order);
         } else {
@@ -51,7 +50,7 @@ public class MatchMarketOrder implements OrderStrategy {
 
         }
 
-        if (sellOrder.getQuantity() != 0) {
+        if (sellOrder.getQuantity() > 0) {
             OrderBook.getOrderBook().addOrderToOrderBook(sellOrder); //for next processing
         }
 
@@ -83,7 +82,7 @@ public class MatchMarketOrder implements OrderStrategy {
 
         }
 
-        if (buyOrder.getQuantity() != 0) {
+        if (buyOrder.getQuantity() > 0) {
             OrderBook.getOrderBook().addOrderToOrderBook(buyOrder); //for next processing
         }
 
@@ -115,7 +114,6 @@ public class MatchMarketOrder implements OrderStrategy {
         log.debug("Executing complete sell order match, buyOrder {}, sellOrder {}", matchedBuyOrder, sellOrder);
         int soldQuantity = sellOrder.getQuantity();
 
-        //buyOrdersList.remove(matchedBuyOrder);
         matchedBuyOrder.setQuantity(matchedBuyOrder.getQuantity() - sellOrder.getQuantity());
         sellOrder.setQuantity(0);
 
@@ -129,9 +127,6 @@ public class MatchMarketOrder implements OrderStrategy {
         log.debug("Executing partial sell order match, buyOrder {}, sellOrder {}", matchedBuyOrder, sellOrder);
         OrderTransaction orderPlaced = OrderTransaction.logOrderTransaction(sellOrder, matchedBuyOrder, matchedBuyOrder.getQuantity());
         log.info("{}", orderPlaced);
-
-        // sellOrdersList.remove(sellOrder);
-
 
         sellOrder.setQuantity(sellOrder.getQuantity() - matchedBuyOrder.getQuantity());
 

@@ -10,21 +10,15 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 @Slf4j
 public class OrderMatchingApplication {
 
     public static void main(String[] args) throws IOException {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/input/input.txt"))) {
-            String file;
-            while ((file = bufferedReader.readLine()) != null) {
-                log.info("file is " + file);
-                clearOrderBook(); //clear orderBook each time new input file is read, comment it, if u want to process on previous orders.
-                readAndMatchOrders(file);
-            }
-        } catch (IOException e) {
-            log.error("Error while reading the file, {}", e.getMessage());
-        }
+
+
+        readFromConsoleAndMatchOrders();
     }
 
     private static void clearOrderBook() {
@@ -56,6 +50,31 @@ public class OrderMatchingApplication {
         } catch (Exception e) {
             log.error("Exception while processing the orders {}, exiting", e.getMessage());
             throw e;
+        }
+    }
+
+
+
+    static void readFromConsoleAndMatchOrders() {
+        Scanner sc = new Scanner(System.in);
+        String input = "";
+        final OrderMatchingService orderMatchingService = new OrderMatchingService();
+
+        while (sc.hasNextLine()) {
+            input = sc.nextLine();
+            if(input.equals("END")) {
+                log.info("End of input");
+                break;
+            }
+            try {
+                Order order = Parser.getParser().parseInput(input);
+                orderMatchingService.processOrder(order);
+
+            } catch (IllegalArgumentException e) {
+                log.error("Error validating given input, {}", e.getMessage());
+            } catch (UnsupportedOperationException e) {
+                log.error("Provided operation (order type) is not supported yet!, {}", e.getMessage());
+            }
         }
     }
 
